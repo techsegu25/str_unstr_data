@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정형 데이터 vs 비정형 데이터 탐구하기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body {
+            font-family: 'Pretendard', sans-serif;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white;
+            }
+            .card-selection {
+                border: 1px solid #ccc !important;
+                background: #f9fafb !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white shadow-md no-print">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-database text-2xl text-yellow-300"></i>
+                <div>
+                    <h1 class="text-xl font-bold">정보 수업: 데이터의 종류 탐구</h1>
+                    <p class="text-xs text-indigo-200">정형 데이터와 비정형 데이터 구분하기</p>
+                </div>
+            </div>
+            <button onclick="window.print()" class="bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 shadow transition">
+                <i class="fa-solid fa-file-pdf text-red-500"></i>
+                <span>PDF 다운로드 / 인쇄</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto w-full p-4 md:p-6 flex-grow">
+        
+        <!-- Name Input Modal/Section -->
+        <div id="name-modal" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border border-indigo-100 no-print">
+            <h2 class="text-lg font-bold text-indigo-900 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-user-pen text-indigo-500"></i>
+                학생 이름을 입력해주세요
+            </h2>
+            <p class="text-sm text-slate-600 mb-4">지문 속 주인공 이름이 입력한 이름으로 바뀝니다!</p>
+            <div class="flex gap-3">
+                <input type="text" id="student-name-input" placeholder="예: 김정보" class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 border-slate-300">
+                <button onclick="applyName()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-semibold transition">
+                    시작하기
+                </button>
+            </div>
+        </div>
+
+        <!-- Concept Cheat Sheet -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 no-print">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div class="flex items-center space-x-2 text-blue-700 font-bold mb-1">
+                    <i class="fa-solid fa-table"></i>
+                    <span>정형 데이터 (Structured Data)</span>
+                </div>
+                <p class="text-xs text-slate-600">
+                    수치, 날짜 등과 같이 규칙적인 형식과 구조(행과 열)가 갖춰진 데이터. 검색과 통계 처리가 용이함.
+                </p>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div class="flex items-center space-x-2 text-amber-700 font-bold mb-1">
+                    <i class="fa-solid fa-photo-video"></i>
+                    <span>비정형 데이터 (Unstructured Data)</span>
+                </div>
+                <p class="text-xs text-slate-600">
+                    텍스트, 이미지, 음성, 영상, 위치 정보 등 고정된 구조가 없는 데이터. 형태가 매우 다양함.
+                </p>
+            </div>
+        </div>
+
+        <!-- Problem Section (Main Paper) -->
+        <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 md:p-8">
+            <div class="border-b pb-4 mb-6 flex justify-between items-end">
+                <div>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-0.5 rounded">실습 문제</span>
+                    <h2 class="text-xl font-bold text-slate-900 mt-2">
+                        [<span class="display-student-name text-indigo-600 font-extrabold">00</span>]이의 하루 속 데이터 찾기
+                    </h2>
+                </div>
+                <div class="text-right text-xs text-slate-500">
+                    이름: <span class="display-student-name font-bold text-slate-800 border-b border-slate-400 px-2 inline-block min-w-[50px]">00</span>
+                </div>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-6 bg-slate-50 p-3 rounded-lg border border-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-indigo-500"></i>
+                <span>글 속의 Highlight 처리된 데이터 항목을 읽고, 각각 <b>정형 데이터</b>인지 <b>비정형 데이터</b>인지 맞춰보세요!</span>
+            </p>
+
+            <!-- Story Context with Interactive Elements -->
+            <div class="leading-relaxed text-slate-700 text-base md:text-lg space-y-4">
+                <p>
+                    <button onclick="selectType(0)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-0">
+                        ⏰ 아침 7시 <span id="badge-0" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>, 
+                    <span class="display-student-name font-semibold text-indigo-600">00</span>이는 스마트폰에서 울리는 
+                    <button onclick="selectType(1)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-1">
+                        🎵 알람 소리 <span id="badge-1" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    를 듣고 눈을 떴다. 세수를 한 후 날씨 앱을 통해 오늘 
+                    <button onclick="selectType(2)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-2">
+                        ☀️ 자외선 지수 7 <span id="badge-2" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    이라는 알림을 보고 선크림을 발랐다.
+                </p>
+
+                <p>
+                    등교준비를 하면서 스마트 워치를 보니 오늘 
+                    <button onclick="selectType(3)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-3">
+                        🏃 목표 걸음 수 10,000보 중 120보 달성 <span id="badge-3" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    이라고 표시되어 있다.
+                </p>
+
+                <p>
+                    학교에서 1교시 수학 시간에 태블릿으로 디지털교과서의 
+                    <button onclick="selectType(4)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-4">
+                        📊 수학 교과 앱 진도율 65% <span id="badge-4" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    를 확인하며 수학 문제를 풀었다.
+                </p>
+
+                <p>
+                    하교 후 학원 가는 버스 안에서 구글 
+                    <button onclick="selectType(5)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-5">
+                        🗺️ 지도 위치와 경로 <span id="badge-5" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    를 확인했다. 학원을 마친 뒤 집으로 와서는 
+                    <button onclick="selectType(6)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-6">
+                        📝 중간고사 시험 시간표 <span id="badge-6" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    를 노트 앱에서 다시 확인했다. 저녁을 먹고 방을 정리한 후, <span class="display-student-name font-semibold text-indigo-600">00</span>이는 유튜브에서 좋아하는 
+                    <button onclick="selectType(7)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-7">
+                        🎮 게임공략 영상 <span id="badge-7" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    과 
+                    <button onclick="selectType(8)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-8">
+                        📹 가수의 직캠 영상 <span id="badge-8" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    을 보며 하루 피로를 풀었다.
+                </p>
+
+                <p>
+                    잠들기 전, 스마트 워치는 오늘 활동 기록으로 
+                    <button onclick="selectType(9)" class="data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition" id="item-9">
+                        🔥 총 소모 칼로리 1,862kcal <span id="badge-9" class="text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600">선택</span>
+                    </button>
+                    를 보여주었다. <span class="display-student-name font-semibold text-indigo-600">00</span>이는 화면을 끄고 생각했다.
+                </p>
+
+                <blockquote class="italic font-serif text-slate-800 bg-indigo-50/50 p-4 border-l-4 border-indigo-500 rounded-r-lg my-4">
+                    "오늘 하루도 많은 데이터가 나를 따라다녔구나!"
+                </blockquote>
+            </div>
+
+            <!-- Submission & Control Section -->
+            <div class="mt-8 flex flex-wrap gap-4 justify-between items-center no-print pt-4 border-t">
+                <button onclick="checkAnswers()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 transition shadow-lg shadow-emerald-100">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span>정답 확인하기</span>
+                </button>
+                <button onclick="resetAnswers()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-4 py-3 rounded-xl transition">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> 다시 풀기
+                </button>
+            </div>
+
+            <!-- Score Display -->
+            <div id="result-score" class="hidden mt-6 p-4 rounded-xl bg-slate-100 border text-center font-bold text-lg"></div>
+
+            <!-- Explanations Sheet (Visible on Submit or Print) -->
+            <div id="explanations" class="mt-8 hidden border-t pt-6">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-indigo-600"></i>
+                    해설 및 정답 보기
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm" id="explanation-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Item Selection -->
+    <div id="selection-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 no-print">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border">
+            <h3 class="font-bold text-slate-800 text-base mb-1" id="modal-item-title">데이터 종류 선택</h3>
+            <p class="text-xs text-slate-500 mb-4">선택한 항목은 어떤 유형의 데이터인가요?</p>
+            
+            <div class="space-y-3">
+                <button onclick="setAnswer('정형')" class="w-full text-left p-3 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50/50 flex items-center justify-between transition group">
+                    <div>
+                        <div class="font-bold text-blue-600">정형 데이터</div>
+                        <div class="text-xs text-slate-500">수치, 정량화된 규칙적인 데이터</div>
+                    </div>
+                    <i class="fa-solid fa-table text-blue-400 group-hover:scale-110 transition"></i>
+                </button>
+
+                <button onclick="setAnswer('비정형')" class="w-full text-left p-3 rounded-xl border-2 border-slate-200 hover:border-amber-500 hover:bg-amber-50/50 flex items-center justify-between transition group">
+                    <div>
+                        <div class="font-bold text-amber-600">비정형 데이터</div>
+                        <div class="text-xs text-slate-500">음성, 영상, 지도/위치, 일반 텍스트 등</div>
+                    </div>
+                    <i class="fa-solid fa-photo-video text-amber-400 group-hover:scale-110 transition"></i>
+                </button>
+            </div>
+
+            <button onclick="closeModal()" class="w-full mt-4 py-2 text-slate-400 hover:text-slate-600 text-xs text-center font-medium">
+                취소
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 border-t py-4 text-center text-xs text-slate-500 no-print">
+        <p>교수·학습 자료 도우미 | 정보 교과 '정형 데이터와 비정형 데이터' 상호작용 학습지</p>
+    </footer>
+
+    <script>
+        const questions = [
+            { id: 0, text: "아침 7시", answer: "정형", desc: "시, 분 등 규격화된 수치로 표현되는 시간 데이터는 정형 데이터입니다." },
+            { id: 1, text: "알람 소리", answer: "비정형", desc: "소리/음성 오디오 파일은 고정된 형태가 없는 비정형 데이터입니다." },
+            { id: 2, text: "자외선 지수 7", answer: "정형", desc: "수치화된 자외선 측정 정보로, 구조화된 정형 데이터입니다." },
+            { id: 3, text: "걸음수 10,000보 중 120보", answer: "정형", desc: "숫자로 명확하게 표현되는 걸음 수 데이터는 정형 데이터입니다." },
+            { id: 4, text: "수학 교과 앱 진도율 65%", answer: "정형", desc: "백분율(%)로 정량화하여 측정되는 정형 데이터입니다." },
+            { id: 5, text: "지도 위치와 경로", answer: "비정형", desc: "지리적 공간 정보 및 위치/경로 데이터는 비정형 데이터입니다." },
+            { id: 6, text: "중간고사 시험 시간표", answer: "정형", desc: "날짜, 시간, 과목 등 행과 열의 구조로 표 형태 저장이 용이한 정형 데이터입니다." },
+            { id: 7, text: "게임공략 영상", answer: "비정형", desc: "비디오/동영상 파일은 대표적인 비정형 데이터입니다." },
+            { id: 8, text: "가수의 직캠 영상", answer: "비정형", desc: "비디오/영상 파일은 고정된 구조가 없는 비정형 데이터입니다." },
+            { id: 9, text: "총 소모 칼로리 1,862kcal", answer: "정형", desc: "숫자로 수치화된 에너지 데이터는 정형 데이터입니다." }
+        ];
+
+        let userAnswers = {};
+        let activeIndex = null;
+        let currentName = "00";
+
+        function applyName() {
+            const input = document.getElementById('student-name-input').value.trim();
+            if (input) {
+                currentName = input;
+                const nameElements = document.querySelectorAll('.display-student-name');
+                nameElements.forEach(el => el.textContent = currentName);
+            }
+        }
+
+        function selectType(index) {
+            activeIndex = index;
+            document.getElementById('modal-item-title').textContent = `'${questions[index].text}'의 데이터 종류는?`;
+            document.getElementById('selection-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('selection-modal').classList.add('hidden');
+            activeIndex = null;
+        }
+
+        function setAnswer(type) {
+            if (activeIndex !== null) {
+                userAnswers[activeIndex] = type;
+                
+                // Update UI badge
+                const badge = document.getElementById(`badge-${activeIndex}`);
+                badge.textContent = type;
+                if (type === '정형') {
+                    badge.className = "text-xs bg-blue-100 text-blue-700 font-bold px-1.5 py-0.5 rounded ml-1";
+                } else {
+                    badge.className = "text-xs bg-amber-100 text-amber-700 font-bold px-1.5 py-0.5 rounded ml-1";
+                }
+            }
+            closeModal();
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            const expList = document.getElementById('explanation-list');
+            expList.innerHTML = '';
+
+            questions.forEach((q, idx) => {
+                const isCorrect = userAnswers[idx] === q.answer;
+                if (isCorrect) score++;
+
+                const itemBtn = document.getElementById(`item-${idx}`);
+                if (userAnswers[idx]) {
+                    if (isCorrect) {
+                        itemBtn.classList.remove('border-indigo-500', 'bg-indigo-50');
+                        itemBtn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                    } else {
+                        itemBtn.classList.remove('border-indigo-500', 'bg-indigo-50');
+                        itemBtn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+                    }
+                }
+
+                // Append explanations
+                const expCard = document.createElement('div');
+                expCard.className = `p-3 rounded-lg border ${isCorrect ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'}`;
+                expCard.innerHTML = `
+                    <div class="flex justify-between items-center font-bold mb-1">
+                        <span>${idx + 1}. ${q.text}</span>
+                        <span class="${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">
+                            ${isCorrect ? '정답 ⭕' : '오답 ❌'} (정답: ${q.answer})
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-600">${q.desc}</p>
+                `;
+                expList.appendChild(expCard);
+            });
+
+            // Show score & explanation
+            const resultDiv = document.getElementById('result-score');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = `총 <span class="text-indigo-600 font-extrabold">${questions.length}</span>개 중 <span class="text-emerald-600 font-extrabold">${score}</span>개 맞췄습니다! 🎉`;
+            
+            document.getElementById('explanations').classList.remove('hidden');
+        }
+
+        function resetAnswers() {
+            userAnswers = {};
+            questions.forEach((q, idx) => {
+                const badge = document.getElementById(`badge-${idx}`);
+                badge.textContent = "선택";
+                badge.className = "text-xs bg-slate-200 px-1.5 py-0.5 rounded ml-1 text-slate-600";
+
+                const itemBtn = document.getElementById(`item-${idx}`);
+                itemBtn.className = "data-item border-b-2 border-dashed border-indigo-500 bg-indigo-50 hover:bg-indigo-100 px-2 py-0.5 rounded font-medium text-indigo-900 transition";
+            });
+
+            document.getElementById('result-score').classList.add('hidden');
+            document.getElementById('explanations').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
